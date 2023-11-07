@@ -36,8 +36,11 @@ public class Block {
         return hash;
     }
 
-    public boolean isValid() throws NoSuchAlgorithmException {
-        return calculatedHash().equals(getHash());
+    public boolean isValid() {
+        try {
+            return calculatedHash().equals(getHash());
+        } catch (Exception e) { }
+        return false;
     }
 
     public String calculatedHash() throws NoSuchAlgorithmException {

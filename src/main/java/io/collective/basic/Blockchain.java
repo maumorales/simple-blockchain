@@ -23,27 +23,24 @@ public class Blockchain {
         return blocks.size();
     }
 
-    public boolean isValid() throws NoSuchAlgorithmException {
-
-        // todo - check an empty chain
+    public boolean isValid() {
         if (isEmpty()) return true;
 
-        // todo - check a chain of one
         Block genesis = get(0);
-        if (size() == 1) {
-            return isMined(genesis) && genesis.isValid();
-        } 
+        if (!isValid(genesis)) return false;
 
-        // todo - check a chain of many
-        if (!isMined(genesis) || !genesis.isValid()) return false;
         for (int i = 1; i < size(); i++) {
             Block prev = get(i - 1);
             Block curr = get(i);
-            if (!isMined(curr) || !curr.isValid()) return false;
+            if (!isValid(curr)) return false;
             if (!curr.getPreviousHash().equals(prev.getHash())) return false;
         }
 
         return true;
+    }
+
+    static boolean isValid(Block block) {
+        return isMined(block) && block.isValid();
     }
 
     /// Supporting functions that you'll need.

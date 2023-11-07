@@ -36,6 +36,10 @@ public class Block {
         return hash;
     }
 
+    public boolean isValid() throws NoSuchAlgorithmException {
+        return calculatedHash().equals(getHash());
+    }
+
     public String calculatedHash() throws NoSuchAlgorithmException {
         return calculateHash(getHashInput());
     }
@@ -43,7 +47,7 @@ public class Block {
     private String getHashInput() {
         byte[] previousHashBytes = reverseByteArray(getPreviousHash().getBytes(StandardCharsets.UTF_8));
         byte[] timestampBytes = ByteBuffer.allocate(Long.BYTES).putLong(getTimestamp()).array();
-        byte[] nonceBytes = ByteBuffer.allocate(Long.BYTES).putInt(getNonce()).array();
+        byte[] nonceBytes = ByteBuffer.allocate(Integer.BYTES).putInt(getNonce()).array();
         return (
             byteArrayToLittleEndianHex(previousHashBytes) +
             byteArrayToLittleEndianHex(timestampBytes) +

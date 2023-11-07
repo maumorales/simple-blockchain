@@ -1,29 +1,49 @@
 package io.collective.basic;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Blockchain {
+    List<Block> blocks = new ArrayList<Block>();
 
     public boolean isEmpty() {
-        return false;
+        return blocks.isEmpty();
     }
 
     public void add(Block block) {
+        blocks.add(block);
+    }
+
+    public Block get(int index) {
+        return blocks.get(index);
     }
 
     public int size() {
-        return 0;
+        return blocks.size();
     }
 
     public boolean isValid() throws NoSuchAlgorithmException {
 
         // todo - check an empty chain
+        if (isEmpty()) return true;
 
         // todo - check a chain of one
+        Block genesis = get(0);
+        if (size() == 1) {
+            return isMined(genesis) && genesis.isValid();
+        } 
 
         // todo - check a chain of many
+        if (!isMined(genesis) || !genesis.isValid()) return false;
+        for (int i = 1; i < size(); i++) {
+            Block prev = get(i - 1);
+            Block curr = get(i);
+            if (!isMined(curr) || !curr.isValid()) return false;
+            if (!curr.getPreviousHash().equals(prev.getHash())) return false;
+        }
 
-        return false;
+        return true;
     }
 
     /// Supporting functions that you'll need.
